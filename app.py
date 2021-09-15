@@ -99,13 +99,10 @@ def eliminarUsuario(id):
 @app.get('/usuarios/<id>')
 def unUsuario(id):
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM usuario where id=%s',(id,))
+    cursor.execute('SELECT * FROM usuario where id=%s',[id])
 
-
-    db.commit()
-
-    usuario = cursor()
-
+    usuario = cursor.fetchall()
+    
     return jsonify(usuario)
     
 app.run(debug=True)
