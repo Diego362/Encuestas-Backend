@@ -1,0 +1,17 @@
+cuando el repocitorio es nuevo
+    git init
+    git add .
+    git commit -m'cambios que realice'
+    git branch -M main
+    git remote add origin ruta_repositorio
+    git push -u origin main
+
+Cuando hacemos cambios sobre el repositorio
+    git add .
+    git commit -m'mejoras'
+    git push
+
+
+
+
+
