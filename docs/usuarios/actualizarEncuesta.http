@@ -1,0 +1,6 @@
+PUT http://localhost:5000/usuarios/1/encuestas/2
+Content-Type: application/json
+    
+{
+    "Nombre": "Diego_Encuesta"
+}

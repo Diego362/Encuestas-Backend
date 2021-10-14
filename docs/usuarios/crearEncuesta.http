@@ -1,0 +1,6 @@
+POST http://localhost:5000/usuarios/2/encuestas
+Content-Type: application/json
+
+{
+    "Nombre": "Encuesta_Camilo"
+}

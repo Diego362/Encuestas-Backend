@@ -1,4 +1,5 @@
 from flask import Flask, json, jsonify, request
+from flask_cors import CORS
 import mysql.connector
 
 db = mysql.connector.connect(
@@ -11,6 +12,7 @@ db = mysql.connector.connect(
 )
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def index():
@@ -66,7 +68,7 @@ def actualizarUsuario(id):
 
 
     cursor.execute('''UPDATE usuario set nombre=%s, 
-        correo=%s, contraseña=%s where id=%s''',(
+        correo=%s, contraseña=%s where id_usuario=%s''',(
             datos['Nombre'],
             datos['Correo'],
             datos['Contraseña'],
@@ -86,7 +88,7 @@ def eliminarUsuario(id):
 
 
     cursor = db.cursor()
-    cursor.execute('DELETE FROM usuario where id=%s',(id,))
+    cursor.execute('DELETE FROM usuario where id_usuario=%s',(id))
 
 
     db.commit()
@@ -99,10 +101,146 @@ def eliminarUsuario(id):
 @app.get('/usuarios/<id>')
 def unUsuario(id):
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM usuario where id=%s',[id])
+    cursor.execute('SELECT * FROM usuario where id_usuario=%s',[id])
 
     usuario = cursor.fetchall()
     
     return jsonify(usuario)
+
+@app.post('/usuarios/<id_usuario>/encuestas')
+def crearEncuesta(id_usuario):
+    #request  => envia el cliente
+    #response => lo que le voy a responder
+    datos = request.json
     
+    cursor = db.cursor()
+
+    cursor.execute('''INSERT INTO encuesta(nombre, id_usuario)
+        VALUE(%s, %s)''', (
+        datos['Nombre'],
+        id_usuario,
+    ))
+
+    db.commit()
+    
+    return jsonify({
+
+        "mensaje": "encuesta almacenada correctamente"
+    })
+    
+@app.get('/usuarios/encuestas')
+def listaEncuesta():
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute('select * from encuesta')
+
+    registros = cursor.fetchall()
+
+    return jsonify(registros)
+
+@app.put('/usuarios/<id_usuario>/encuestas/<id_encuesta>')
+def actualizarEncuesta(id_usuario, id_encuesta):
+
+    datos=request.json
+
+    cursor = db.cursor()
+
+
+    cursor.execute('''UPDATE encuesta set nombre=%s, id_usuario=%s
+        where id_encuesta=%s''',(
+            datos['Nombre'],
+            id_usuario,
+            id_encuesta
+        ))
+    
+    db.commit()
+
+    return jsonify({
+
+        "mensaje": "encuesta actualizada correctamente"
+    })  
+
+@app.delete('/usuarios/<id_usuario>/encuestas/<id_encuesta>')
+def eliminarEncuesta(id_usuario, id_encuesta):
+
+
+    cursor = db.cursor()
+    cursor.execute('DELETE FROM encuesta where id_usuario=%s AND id_encuesta=%s',(id_usuario, id_encuesta))
+
+
+    db.commit()
+
+    return jsonify({
+
+        "mensaje": "encuesta eliminada correctamente"
+    })
+
+@app.post('/encuestas/<id_encuesta>/secciones')
+def crearSeccion(id_encuesta):
+    #request  => envia el cliente
+    #response => lo que le voy a responder
+    datos = request.json
+    
+    cursor = db.cursor()
+
+    cursor.execute('''INSERT INTO seccion(nombre, id_encuesta)
+        VALUE(%s, %s)''', (
+        datos['Nombre'],
+        id_encuesta,
+    ))
+
+    db.commit()
+    
+    return jsonify({
+
+        "mensaje": "seccion almacenada correctamente"
+    })
+
+@app.get('/encuestas/secciones')
+def listaSeccion():
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute('select * from seccion')
+
+    registros = cursor.fetchall()
+
+    return jsonify(registros)
+
+@app.put('/encuestas/<id_encuesta>/secciones/<id_seccion>')
+def actualizarSeccion(id_encuesta, id_seccion):
+
+    datos=request.json
+
+    cursor = db.cursor()
+
+
+    cursor.execute('''UPDATE seccion set nombre=%s, id_encuesta=%s
+        where id_seccion=%s''',(
+            datos['Nombre'],
+            id_encuesta,
+            id_seccion
+        ))
+    
+    db.commit()
+
+    return jsonify({
+
+        "mensaje": "seccion actualizada correctamente"
+    })  
+
+@app.delete('/encuestas/<id_encuesta>/secciones/<id_seccion>')
+def eliminarSeccion(id_encuesta, id_seccion):
+
+
+    cursor = db.cursor()
+    cursor.execute('DELETE FROM seccion where id_encuesta=%s AND id_seccion=%s',(id_encuesta, id_seccion))
+
+
+    db.commit()
+
+    return jsonify({
+
+        "mensaje": "seccion eliminada correctamente"
+    })
+
 app.run(debug=True)
