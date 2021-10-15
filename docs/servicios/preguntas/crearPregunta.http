@@ -1,0 +1,6 @@
+POST http://localhost:5000/secciones/1/preguntas/1
+Content-Type: application/json
+
+{
+    "Nombre": "¿Que edad tiene?"
+}

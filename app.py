@@ -243,4 +243,73 @@ def eliminarSeccion(id_encuesta, id_seccion):
         "mensaje": "seccion eliminada correctamente"
     })
 
+@app.post('/secciones/<id_seccion>/preguntas/<id_tipopregunta>')
+def crearPregunta(id_seccion, id_tipopregunta):
+    #request  => envia el cliente
+    #response => lo que le voy a responder
+    datos = request.json
+    
+    cursor = db.cursor()
+
+    cursor.execute('''INSERT INTO pregunta(nombre, id_seccion, id_tipopregunta)
+        VALUE(%s, %s, %s)''', (
+        datos['Nombre'],
+        id_seccion,
+        id_tipopregunta
+    ))
+
+    db.commit()
+    
+    return jsonify({
+
+        "mensaje": "pregunta almacenada correctamente"
+    })
+
+@app.get('/secciones/preguntas')
+def listaPregunta():
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute('select * from pregunta')
+
+    registros = cursor.fetchall()
+
+    return jsonify(registros)
+
+@app.put('/secciones/<id_seccion>/preguntas/<id_pregunta>')
+def actualizarPregunta(id_seccion, id_pregunta):
+
+    datos=request.json
+
+    cursor = db.cursor()
+
+
+    cursor.execute('''UPDATE pregunta set nombre=%s, id_seccion=%s
+        where id_pregunta=%s''',(
+            datos['Nombre'],
+            id_seccion,
+            id_pregunta
+        ))
+    
+    db.commit()
+
+    return jsonify({
+
+        "mensaje": "pregunta actualizada correctamente"
+    })  
+
+@app.delete('/secciones/<id_seccion>/preguntas/<id_pregunta>')
+def eliminarPregunta(id_seccion, id_pregunta):
+
+
+    cursor = db.cursor()
+    cursor.execute('DELETE FROM pregunta where id_seccion=%s AND id_pregunta=%s',(id_seccion, id_pregunta))
+
+
+    db.commit()
+
+    return jsonify({
+
+        "mensaje": "pregunta eliminada correctamente"
+    })
+
 app.run(debug=True)
