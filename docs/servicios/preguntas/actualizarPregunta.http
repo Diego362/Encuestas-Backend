@@ -1,6 +1,8 @@
-PUT http://localhost:5000/secciones/1/preguntas/3
+PUT http://localhost:5000/preguntas/7
 Content-Type: application/json
     
 {
-    "Nombre": "¿Como estas?"
+    "Nombre": "¿Como estas?",
+    "id_seccion": 10
+    "id_tipopregunta": 1
 }

@@ -1,6 +1,7 @@
-POST http://localhost:5000/encuestas/7/secciones
+POST http://localhost:5000/secciones
 Content-Type: application/json
 
 {
-    "Nombre": "Datos_personales"
+    "Nombre": "Ayudas_Gobierno",
+    "id_encuesta": 1
 }

@@ -1,6 +1,7 @@
-PUT http://localhost:5000/encuestas/1/secciones/1
+PUT http://localhost:5000/secciones/1
 Content-Type: application/json
     
 {
-    "Nombre": "Calificacion_Docentes"
+    "Nombre": "Calificacion_Estudiantes",
+    "id_encuesta": 1
 }
