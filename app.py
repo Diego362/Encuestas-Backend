@@ -48,7 +48,6 @@ def crearUsuario():
     )
 
     db.commit()
-
     return jsonify({"mensaje": "usuario almacenado correctamente"})
 
 
