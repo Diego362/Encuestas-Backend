@@ -388,4 +388,4 @@ def unaPregunta(id):
     return jsonify(pregunta)
 
 
-app.run(debug=True)
+app.run(debug=False)
