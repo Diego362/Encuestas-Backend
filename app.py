@@ -9,7 +9,11 @@ from flask_jwt_extended import (
 )
 
 db = mysql.connector.connect(
-    host="localhost", user="root", password="", database="sistema", port=3306
+    host="academia.c1mebdhdxytu.us-east-1.rds.amazonaws.com",
+    user="p3",
+    password="milEbEANiCOLEwDo",
+    database="p3",
+    port=3306,
 )
 
 app = Flask(__name__)
@@ -153,10 +157,12 @@ def crearEncuesta():
 
 
 @app.get("/encuestas")
+@jwt_required()
 def listaEncuesta():
     cursor = db.cursor(dictionary=True)
+    GetUsuarioLog = get_jwt_identity()
 
-    cursor.execute("select * from encuesta")
+    cursor.execute("select * from encuesta where id_usuario=%s ", (GetUsuarioLog,))
 
     registros = cursor.fetchall()
 
@@ -202,6 +208,7 @@ def eliminarEncuesta(id_encuesta):
 @app.get("/encuestas/<id>")
 def unaEncuesta(id):
     cursor = db.cursor()
+
     cursor.execute("SELECT * FROM encuesta where id_encuesta=%s", [id])
 
     encuesta = cursor.fetchall()
@@ -232,6 +239,7 @@ def crearSeccion():
 
 
 @app.get("/secciones")
+@jwt_required()
 def listaSeccion():
     cursor = db.cursor(dictionary=True)
 
@@ -312,6 +320,7 @@ def crearPregunta():
 
 
 @app.get("/preguntas")
+@jwt_required()
 def listaPregunta():
     cursor = db.cursor(dictionary=True)
 
@@ -357,6 +366,17 @@ def eliminarPregunta(id_pregunta):
     db.commit()
 
     return jsonify({"mensaje": "pregunta eliminada correctamente"})
+
+
+@app.get("/tipopreguntas")
+def listaTipoPregunta():
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("select * from tipo_pregunta")
+
+    registros = cursor.fetchall()
+
+    return jsonify(registros)
 
 
 @app.get("/preguntas/<id>")
